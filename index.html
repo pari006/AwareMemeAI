@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AwareMeme AI - Government Awareness Meme Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #d4af37;
+            --primary-light: #f0d175;
+            --secondary: #8b7355;
+            --danger: #b91c1c;
+            --dark: #1a1a1a;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --gold: #d4af37;
+            --burgundy: #740001;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.6); }
+        }
+
+        @keyframes slide-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body {
+            font-family: 'Cinzel', 'Garamond', 'Georgia', serif;
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #2d1f1a, #1a1410);
+            background-size: 400% 400%;
+            animation: gradient-shift 20s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(30px);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #d4af37 0%, #f0d175 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-weight: 800;
+        }
+
+        .header h1 i {
+            animation: float 3s ease-in-out infinite;
+            color: var(--gold);
+            -webkit-text-fill-color: var(--gold);
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(139, 115, 85, 0.3));
+            color: var(--gold);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 35px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px 0 rgba(212, 175, 55, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gold);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            font-size: 1rem;
+            background: rgba(26, 26, 26, 0.6);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+        }
+
+        .topic-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .topic-pill {
+            padding: 10px 18px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            background: rgba(26, 26, 26, 0.5);
+            color: var(--text-primary);
+        }
+
+        .topic-pill:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .topic-pill.active {
+            background: rgba(212, 175, 55, 0.4);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--primary-light));
+            color: var(--dark);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--burgundy), #b91c1c);
+            color: var(--text-primary);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(212, 175, 55, 0.2);
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .status-message {
+            padding: 18px 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(15px);
+        }
+
+        .status-message.active {
+            display: flex;
+        }
+
+        .status-message.error {
+            background: rgba(185, 28, 28, 0.2);
+            border-left: 4px solid var(--danger);
+            color: #fca5a5;
+        }
+
+        .status-message.success {
+            background: rgba(212, 175, 55, 0.2);
+            border-left: 4px solid var(--gold);
+            color: var(--primary-light);
+        }
+
+        .caption-box {
+            background: rgba(26, 26, 26, 0.6);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .caption-text {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+
+        .meme-preview {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .meme-preview img {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .info-panel {
+            background: rgba(26, 26, 26, 0.5);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 25px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .info-panel h3 {
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .info-panel ul {
+            list-style: none;
+        }
+
+        .info-panel li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-brain"></i>
+                AwareMeme AI
+            </h1>
+            <p>AI-Powered Government Awareness Meme Generator</p>
+            <span class="badge">
+                <i class="fas fa-robot"></i> Powered by Gemini AI
+            </span>
+        </div>
+
+        <div id="statusMessage" class="status-message">
+            <i class="fas fa-info-circle"></i>
+            <span id="statusText"></span>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-edit"></i>
+                    Meme Configuration
+                </h2>
+
+                <form id="memeForm">
+                    <div class="form-group">
+                        <label class="form-label" for="topic">
+                            <i class="fas fa-bullseye"></i>
+                            Campaign Topic
+                        </label>
+                        <input
+                            type="text"
+                            id="topic"
+                            class="form-input"
+                            placeholder="e.g., Road Safety, Cyberbullying"
+                            value="48-hour work"
+                        />
+                    </div>
+
+                    <div class="topic-pills">
+                        <div class="topic-pill" data-topic="Road Safety">🚗 Road Safety</div>
+                        <div class="topic-pill" data-topic="Cyberbullying Prevention">💻 Cyberbullying</div>
+                        <div class="topic-pill" data-topic="Health & Hygiene">🏥 Health</div>
+                        <div class="topic-pill" data-topic="Digital Literacy">📱 Digital Literacy</div>
+                        <div class="topic-pill" data-topic="Women's Safety">👩 Women's Safety</div>
+                        <div class="topic-pill" data-topic="Voting Awareness">🗳️ Voting</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="top">
+                            <i class="fas fa-arrow-up"></i>
+                            Top Text (Optional)
+                        </label>
+                        <input
+                            type="text"
+                            id="top"
+                            class="form-input"
+                            placeholder="Leave empty for AI-generated text"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="bottom">
+                            <i class="fas fa-arrow-down"></i>
+                            Bottom Text (Optional)
+                        </label>
+                        <input
+                            type="text"
+                            id="bottom"
+                            class="form-input"
+                            placeholder="Leave empty for AI-generated text"
+                        />
+                    </div>
+
+                    <button type="submit" id="go" class="btn btn-primary">
+                        <i class="fas fa-magic"></i>
+                        <span>Generate Meme</span>
+                    </button>
+                </form>
+
+                <div class="info-panel">
+                    <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Enter a campaign topic or select preset</li>
+                        <li><i class="fas fa-check-circle"></i> Add custom text or let AI generate captions</li>
+                        <li><i class="fas fa-check-circle"></i> Download your meme instantly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-image"></i>
+                    Meme Preview
+                </h2>
+
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Generating your awareness meme...</p>
+                </div>
+
+                <div id="result" class="hidden">
+                    <div class="caption-box">
+                        <div class="caption-text" id="caption"></div>
+                    </div>
+
+                    <div class="meme-preview">
+                        <img id="meme" alt="Generated Meme" />
+                    </div>
+
+                    <button id="downloadBtn" class="btn btn-download" style="width: 100%;">
+                        <i class="fas fa-download"></i>
+                        <span>Download Meme</span>
+                    </button>
+                </div>
+
+                <div id="emptyState" style="text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-image" style="font-size: 80px; color: rgba(212, 175, 55, 0.3); margin-bottom: 20px;"></i>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                        Your generated meme will appear here
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const go = document.getElementById('go');
+        const topicEl = document.getElementById('topic');
+        const topEl = document.getElementById('top');
+        const bottomEl = document.getElementById('bottom');
+        const resultDiv = document.getElementById('result');
+        const captionEl = document.getElementById('caption');
+        const memeImg = document.getElementById('meme');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loading = document.getElementById('loading');
+        const emptyState = document.getElementById('emptyState');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusText = document.getElementById('statusText');
+        const topicPills = document.querySelectorAll('.topic-pill');
+        const form = document.getElementById('memeForm');
+
+        // Topic pill selection
+        topicPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                topicPills.forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                topicEl.value = pill.dataset.topic;
+            });
+        });
+
+        // Show status message
+        function showStatus(message, type = 'info') {
+            statusText.textContent = message;
+            statusMessage.className = `status-message active ${type}`;
+            setTimeout(() => {
+                statusMessage.classList.remove('active');
+            }, 5000);
+        }
+
+        // Form submission - FIXED to match your backend format
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const topic = topicEl.value.trim();
+            if (!topic) {
+                showStatus('Please enter a topic', 'error');
+                return;
+            }
+
+            go.disabled = true;
+            go.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Generating...</span>';
+            loading.classList.add('active');
+            resultDiv.classList.add('hidden');
+            emptyState.classList.add('hidden');
+
+            console.log('Sending request to backend...');
+
+            try {
+                const resp = await fetch('http://localhost:8000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topic,
+                        top_text: topEl.value || undefined,
+                        bottom_text: bottomEl.value || undefined,
+                    }),
+                });
+
+                console.log('Response status:', resp.status);
+
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => null);
+                    throw new Error(err?.detail || resp.statusText || 'Generation failed');
+                }
+
+                const data = await resp.json();
+                console.log('Response data received:', data);
+
+                const { caption, image_b64 } = data;
+                
+                captionEl.textContent = caption || 'Generated meme';
+                memeImg.src = 'data:image/png;base64,' + image_b64;
+                
+                loading.classList.remove('active');
+                resultDiv.classList.remove('hidden');
+                
+                showStatus('Meme generated successfully! ✨', 'success');
+
+            } catch (e) {
+                console.error('Error:', e);
+                loading.classList.remove('active');
+                emptyState.classList.remove('hidden');
+                showStatus('Error: ' + (e.message || e), 'error');
+            } finally {
+                go.disabled = false;
+                go.innerHTML = '<i class="fas fa-magic"></i><span>Generate Meme</span>';
+            }
+        });
+
+        // Download functionality
+        downloadBtn.onclick = () => {
+            const imageURL = memeImg.src;
+            const a = document.createElement('a');
+            a.href = imageURL;
+            a.download = 'awarememe_' + Date.now() + '.png';
+            a.click();
+            showStatus('Meme downloaded! 🎉', 'success');
+        };
+
+        // Initial message
+        setTimeout(() => {
+            showStatus('Ready! Backend should be at http://localhost:8000/generate', 'success');
+        }, 1000);
+    </script>
+</body>
+</html>

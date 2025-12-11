@@ -1,0 +1,14 @@
+torch
+transformers
+datasets
+pandas
+Pillow
+sentence-transformers
+fastapi
+uvicorn
+numpy
+scikit-learn
+diffusers>=0.22.0
+accelerate>=0.20.0
+safetensors
+openai  
