@@ -19,7 +19,7 @@ from google.genai.types import GenerateContentConfig
 # -------------------------
 # CONFIG — YOUR API KEY
 # ------------------------- 
-API_KEY = "AIzaSyAXwrziKIk_SVGj2rm5joNbK9GXSTuxGNk"
+API_KEY = "Your-api-key-here"
 MODEL_NAME = "gemini-3-pro-image-preview"
 
 client = genai.Client(api_key=API_KEY)
