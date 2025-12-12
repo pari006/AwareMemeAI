@@ -9,17 +9,19 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from google.genai import types
-import google.generativeai as genai
-
 from google import genai
-from google.genai.types import GenerateContentConfig
+from google.genai import types
 
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
+
+# Fetch values
+API_KEY = os.getenv("API_KEY")
 # -------------------------
 # CONFIG — YOUR API KEY
 # ------------------------- 
-API_KEY = "AIzaSyAXwrziKIk_SVGj2rm5joNbK9GXSTuxGNk"
 MODEL_NAME = "gemini-3-pro-image-preview"
 
 client = genai.Client(api_key=API_KEY)
